@@ -29,13 +29,17 @@ function WWO_outputprocessor()
         hdata_raw = daydata.hourly{d};
         hdata_table = struct2table(hdata_raw, 'asarray', 1);
         hdata_date = repmat(string(daydata.date{d}), size(hdata_table, 1), 1);
-        hdata_table.time = datestr(cellfun(@(x) str2num(x)/2400, hdata_table.time));
+        hdata_table.time = datestr(cellfun(@(x) str2double(x)/2400, hdata_table.time));
         hdata_table = maketablenumeric(hdata_table);
-        
-        hdata_man = array2table(date, 'VariableNames', {'date'})
-        hourdata = vertcat(hourdata, a)
+        for r = 1:size(hdata_table, 1) 
+            hdata_datetimestr{r, 1} = string(strjoin({hdata_date{r}, hdata_table.time(r, :)}, ' '));
+            hdata_datetime{r, 1} = datenum(hdata_datetimestr{r});
+        end
+        hdata_man = cell2table([hdata_datetimestr, hdata_datetime], 'VariableNames', {'datetimestr', 'datetime'});
+        hdata_day = horzcat(hdata_man, hdata_table);
+        hourdata = vertcat(hourdata, hdata_day);
     end
-    
+    j=1;
     
     % I have made some convenience functions for manipulating the data, they are located in bin/
     %       [subset] = daterange(table, start, end)
@@ -54,8 +58,8 @@ function [table] = maketablenumeric(table)
             try
 %                 asarray = str2num(cell2mat(table{:,c}));
 %                 table{:, c} = asarray;
-                table{r, c} = {str2double(table{r, c})};
-                j=1;
+                table{r, c} = str2double(table{r, c});
+                disp('conversion success')
             catch
 
             end

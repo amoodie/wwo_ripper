@@ -21,9 +21,20 @@ function WWO_outputprocessor()
         dayrow = struct2table(ddata, 'asarray', 1);
         daydata = vertcat(daydata, dayrow);
     end
+    % save the data to a mat file?
     
     % make the data into one really long hourly table
-    
+    hourdata = [];
+    for d = 1:size(daydata, 1)
+        hdata_raw = daydata.hourly{d};
+        hdata_table = struct2table(hdata_raw, 'asarray', 1);
+        hdata_date = repmat(string(daydata.date{d}), size(hdata_table, 1), 1);
+        hdata_table.time = datestr(cellfun(@(x) str2num(x)/2400, hdata_table.time));
+        hdata_table = maketablenumeric(hdata_table);
+        
+        hdata_man = array2table(date, 'VariableNames', {'date'})
+        hourdata = vertcat(hourdata, a)
+    end
     
     
     % I have made some convenience functions for manipulating the data, they are located in bin/
@@ -32,6 +43,24 @@ function WWO_outputprocessor()
     
     
     
+end
+
+function [table] = maketablenumeric(table)
+    %maketablenumeric attempts to convert each column in the table to numeric
+    %
+    
+    for c = 1:size(table, 2)
+        for r = 1:size(table, 1)
+            try
+%                 asarray = str2num(cell2mat(table{:,c}));
+%                 table{:, c} = asarray;
+                table{r, c} = {str2double(table{r, c})};
+                j=1;
+            catch
+
+            end
+        end
+    end
 end
 
 

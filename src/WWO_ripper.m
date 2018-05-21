@@ -27,7 +27,7 @@ dates = lastdate-1:-1:lastdate_new;
 
 
 %% preallocate 
-errorlist = [];
+errorlist = {};
 
 
 %% loop through the dates
@@ -44,7 +44,7 @@ for d = 1:n
     catch
         apiresult = [];
         warning(['ERROR COLLECTING FOR DATE: ' thedateform])
-        errorlist(end+1) = {thedateform};
+        errorlist(end+1,1) = {thedateform};
     end
     
     % save the api result to file without processing
@@ -56,9 +56,11 @@ for d = 1:n
 end
 
 %% print out errored
-disp('Error collection for dates:')
-for e = 1:length(errorlist)
-    disp(errorlist{e})
+if length(errorlist) > 0
+    disp('Error collection for dates:')
+    for e = 1:length(errorlist)
+        disp(errorlist{e})
+    end
 end
 
 

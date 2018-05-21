@@ -7,7 +7,7 @@ apikey = fgetl(apikey_fid);
 
 
 %% load last date
-lastdate_fid = fopen(fullfile('src', 'lastdate.txt'));
+lastdate_fid = fopen(fullfile('lastdate.txt'));
 lastdate_str = fgetl(lastdate_fid);
 lastdate = str2double(lastdate_str);
 
@@ -16,37 +16,41 @@ lastdate = str2double(lastdate_str);
 querylocation = 'dongying+china';
 queryformat = 'json';
 queryinterval = '1';
-pausedur = 1.5;
+pausedur = 5;
 baseapi = 'http://api.worldweatheronline.com/premium/v1/past-weather.ashx';
 
 
 %% get dates to hit on this script run
-n = 0; % set to 2 for testing, 490 for real running
+n = 450; % set to 2 for testing, 490 for real running
 lastdate_new = lastdate-n-1;
 dates = lastdate-1:-1:lastdate_new;
 
 
 %% loop through the dates
 for d = 1:n
+    % determine the date to make the call for
     thedate = dates(d);
     thedateform = datestr(thedate, 'YYYY-mm-dd');
     
-%     format_apicall(baseapi, apikey, querylocation, 'date', thedateform, 'tp', queryinterval, 'format', queryformat)
-%     '?key=<redacted>&q=dongying+china&date=2017-01-01&tp=1&format=json'
-    
+    % format the api call and make the call    
     apicall = [baseapi, '?', 'key=', apikey, '&', 'q=', querylocation, '&', 'date=', thedateform, '&',  'tp=', queryinterval, '&', 'format=', queryformat];
+    disp(['making api call for ' thedateform])
     apiresult = webread(apicall);
     
+    % save the api result to file without processing
     save(fullfile('..', 'output', [thedateform, '_weather', '.mat']), 'apiresult')
     
+    % pause before next call
     pause(pausedur)
+    
 end
 
 
 %% update the lastdate file
 fclose(lastdate_fid);
-lastdate_fid = fopen(fullfile('src', 'lastdate.txt'), 'w');
-fprintf(lastdate_fid, '%d', lastdate_new)
+lastdate_fid = fopen(fullfile('lastdate.txt'), 'w');
+fprintf(lastdate_fid, '%d', lastdate_new);
+fclose(lastdate_fid);
 
 end
 

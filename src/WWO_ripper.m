@@ -21,9 +21,13 @@ baseapi = 'http://api.worldweatheronline.com/premium/v1/past-weather.ashx';
 
 
 %% get dates to hit on this script run
-n = 450; % set to 2 for testing, 490 for real running
-lastdate_new = lastdate-n-1;
+n = 100; % set to 2 for testing, 490 for real running
+lastdate_new = lastdate-n;
 dates = lastdate-1:-1:lastdate_new;
+
+
+%% preallocate 
+errorlist = [];
 
 
 %% loop through the dates
@@ -35,7 +39,13 @@ for d = 1:n
     % format the api call and make the call    
     apicall = [baseapi, '?', 'key=', apikey, '&', 'q=', querylocation, '&', 'date=', thedateform, '&',  'tp=', queryinterval, '&', 'format=', queryformat];
     disp(['making api call for ' thedateform])
-    apiresult = webread(apicall);
+    try
+        apiresult = webread(apicall);
+    catch
+        apiresult = [];
+        warning(['ERROR COLLECTING FOR DATE: ' thedateform])
+        errorlist(end+1) = {thedateform};
+    end
     
     % save the api result to file without processing
     save(fullfile('..', 'output', [thedateform, '_weather', '.mat']), 'apiresult')
@@ -43,6 +53,12 @@ for d = 1:n
     % pause before next call
     pause(pausedur)
     
+end
+
+%% print out errored
+disp('Error collection for dates:')
+for e = 1:length(errorlist)
+    disp(errorlist{e})
 end
 
 

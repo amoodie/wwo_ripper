@@ -38,6 +38,7 @@ function WWO_outputprocessor()
         hdata_man = cell2table([hdata_datetimestr, hdata_datetime], 'VariableNames', {'datetimestr', 'datetime'});
         hdata_day = horzcat(hdata_man, hdata_table);
         hourdata = vertcat(hourdata, hdata_day);
+        disp([num2str(d), 'th day'])
     end
     j=1;
     
@@ -58,8 +59,11 @@ function [table] = maketablenumeric(table)
             try
 %                 asarray = str2num(cell2mat(table{:,c}));
 %                 table{:, c} = asarray;
-                table{r, c} = str2double(table{r, c});
-                disp('conversion success')
+                j=1;
+                raw = table{r, c};
+                table{r, c} = str2double(raw{1});
+%                 disp('conversion success')
+                
             catch
 
             end

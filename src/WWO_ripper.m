@@ -16,13 +16,14 @@ lastdate = str2double(lastdate_str);
 querylocation = 'dongying+china';
 queryformat = 'json';
 queryinterval = '1';
-pausedur = 5;
+pausedur = 4;
+apioptions = weboptions('Timeout', 25);
 baseapi = 'http://api.worldweatheronline.com/premium/v1/past-weather.ashx';
 
 
 %% get dates to hit on this script run
 % method for pulling from file
-n = 450; % set to 2 for testing, 490 for real running
+n = 450; % set to 2 for testing, 450 for real running
 lastdate_new = lastdate-n;
 dates = lastdate-1:-1:lastdate_new;
 
@@ -45,7 +46,7 @@ for d = 1:n
     apicall = [baseapi, '?', 'key=', apikey, '&', 'q=', querylocation, '&', 'date=', thedateform, '&',  'tp=', queryinterval, '&', 'format=', queryformat];
     disp(['making api call for ' thedateform])
     try
-        apiresult = webread(apicall);
+        apiresult = webread(apicall, apioptions);
         disp('api call success')
     catch
         apiresult = [];

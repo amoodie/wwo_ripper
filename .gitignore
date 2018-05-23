@@ -35,5 +35,7 @@ src/key.txt
 output/*.mat
 output/*.csv
 output/*.json
+
+# dont sync the clean data table files
 clean/*.mat
 

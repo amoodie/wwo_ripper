@@ -56,7 +56,7 @@ function WWO_outputprocessor()
         hdata_table = make_datatable(hdata_raw);
         
         % manually create a datetime and delete the old time objs
-        man_datetime = repmat(datenum(daydata.date(d, :)), size(hdata_table, 1), 1) + (hdata_table.time / 2400);
+        man_datetime = repmat(daydata.datetime(d), size(hdata_table, 1), 1) + (hdata_table.time / 2400);
         hdata_times = array2table(man_datetime, 'VariableNames', {'datetime'});
         hdata_times.datetimestr = datestr(hdata_times.datetime, 'YYYY-mm-dd HH:MM');
         hdata_table.time = [];

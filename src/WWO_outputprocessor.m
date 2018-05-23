@@ -37,6 +37,7 @@ function WWO_outputprocessor()
     save(fullfile('..', 'clean', 'daydata.mat'), 'daydata')
     
     % also save a version that does not have hourly data within (for size)
+    hourly = daydata.hourly;
     daydata.hourly = [];
     save(fullfile('..', 'clean', 'daydata_nohourly.mat'), 'daydata')
     
@@ -44,7 +45,7 @@ function WWO_outputprocessor()
     hourdata = [];
     for d = 1:size(daydata, 1)
         % get the raw hourly from the daydata table
-        hdata_raw = daydata.hourly{d};
+        hdata_raw = hourly{d};
         
         % convert to a table (and numerics)
         hdata_table = make_datatable(hdata_raw);

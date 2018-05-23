@@ -35,3 +35,5 @@ src/key.txt
 output/*.mat
 output/*.csv
 output/*.json
+clean/*.mat
+

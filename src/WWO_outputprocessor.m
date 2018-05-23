@@ -24,7 +24,12 @@ function WWO_outputprocessor()
         ddata = ddata_raw.apiresult.data.weather;
         
         % convert to a table (and numerics)
-        dayrow = make_datatable(ddata);
+        dayrow_raw = make_datatable(ddata);
+        
+        % add datetime numeric variable
+        dayrow_raw.Properties.VariableNames(strcmp('date', dayrow_raw.Properties.VariableNames)) = {'datetimestr'};
+        daydatetime = array2table(datenum(dayrow_raw.datetimestr), 'VariableNames', {'datetime'});
+        dayrow = horzcat(daydatetime, dayrow_raw);
         
         % vertcat it into a big table
         daydata = vertcat(daydata, dayrow);
@@ -68,8 +73,9 @@ function WWO_outputprocessor()
     save(fullfile('..', 'clean', 'hourdata.mat'), 'hourdata')
     
 
-    % I have made some convenience functions for manipulating the data, they are located in bin/
-    %       [subset] = daterange(table, start, end)
+    % I have started some convenience functions for manipulating the data, they are located in bin/
+    %       [subset] = date_range(table, start, end)
+    %       [davg] = daily_average(table, variable)
     
     
     

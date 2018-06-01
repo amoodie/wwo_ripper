@@ -1,10 +1,11 @@
 function WWO_outputprocessor()
     
+    %% get the file information to loop through
     % directory of the raw dl files
     directory = fullfile('..', 'output');
 
     % load all the files
-    [datastruct] = listfiles(directory);
+    [datastruct] = listmats(directory);
     [datanames] = vertcat({datastruct.name});
     
     % strip the date out and sort them for looping into a table
@@ -13,7 +14,8 @@ function WWO_outputprocessor()
     datesnum = cellfun(@(x) datenum(x), dates);
     [~, sortidx] = sort(datesnum);
     
-    % make the table with one row per day first
+    %% make the daily data table
+    % one row per day
     daydata = [];
     datalist = datanames(sortidx);
     for d = 1:length(datalist)
@@ -46,6 +48,7 @@ function WWO_outputprocessor()
     daydata.hourly = [];
     save(fullfile('..', 'clean', 'daydata_nohourly.mat'), 'daydata')
     
+    %% make the hourly table
     % make the data into one really long hourly table
     hourdata = [];
     for d = 1:size(daydata, 1)
@@ -71,14 +74,6 @@ function WWO_outputprocessor()
     
     % save the hourdata to a mat file
     save(fullfile('..', 'clean', 'hourdata.mat'), 'hourdata')
-    
-
-    % I have started some convenience functions for manipulating the data, they are located in bin/
-    %       [subset] = date_range(table, start, end)
-    %       [davg] = daily_average(table, variable)
-    
-    
-    
     
 end
 
@@ -114,17 +109,3 @@ function [data_table] = make_datatable(data_raw)
     
 end
 
-
-function [datastruct] = listfiles(directory)
-    %listfiles loads a list of all names
-    
-    % get the directory listing and identify the .mat files
-    listing = dir(directory); % all items in directory
-    listing(ismember( {listing.name}, {'.', '..'})) = [];  % dont want . or ..
-    filesBool = ~[listing.isdir]; % logical of files only
-    listing = listing(filesBool);
-    listingnames = arrayfun(@(x) x.name, listing, 'Unif', 0);
-    ismat = cellfun(@(x) contains(x, '.mat'), listingnames);
-    datastruct = listing(ismat);
-    
-end

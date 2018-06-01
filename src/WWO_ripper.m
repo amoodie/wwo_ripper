@@ -12,6 +12,8 @@ function WWO_ripper()
     % In summary, you must first obtain an API key from the WWO website. 
     % Then, edit the parameters as needed below to set up the API calls.
     % Finally, run this script daily until all data are aquired.
+    % The script only saves the raw data, see WWO_outputprocessor.m for how
+    % to turn the raw data into useful organized tables.
     %
 
     

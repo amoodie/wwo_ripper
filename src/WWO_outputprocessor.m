@@ -1,4 +1,9 @@
 function WWO_outputprocessor()
+    %WWO_outputprocessor churns through the downloaded API calls and produces tables
+    %
+    % This script simply loops through every file in output folder and makes
+    % daily and hourly tables of all of the data in the API call.
+    %
     
     %% get the file information to loop through
     % directory of the raw dl files

@@ -68,7 +68,11 @@ Specifically, the API T+C state:
 
 __Importantly, if you use the data from the WWO you must cite them as such!!__
 
+I believe this program is in compliance with the T+C because of the following line:
 
+    You may access, view and make copies of the data in the API for your personal or commercial use
+
+    
 
 ## Authors
 
